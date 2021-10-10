@@ -2,6 +2,8 @@ package money.wallet.api.service;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,8 +60,20 @@ public class RepositoryWalletService implements WalletService {
 
     @Override
     public WalletStatement getStatement( long walletId ) {
-        // TODO paging/sorting (if needed)
-        return new WalletStatement();
+        List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId );
+        return new WalletStatement( walletTransactions );
+    }
+
+    @Override
+    public WalletStatement getStatement( long walletId, Sort sort ) {
+        List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId, sort );
+        return new WalletStatement( walletTransactions );
+    }
+
+    @Override
+    public WalletStatement getStatement( long walletId, Pageable pageable ) {
+        List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId, pageable );
+        return new WalletStatement( walletTransactions );
     }
 
     private WalletOperation modifyWalletAmount( long walletId, long amount, long transactionId, boolean isDeposit ) {

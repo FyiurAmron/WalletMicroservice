@@ -36,6 +36,7 @@ public class WalletController {
     public WalletStatement statement(
             @PathVariable( value = "walletId" ) long walletId
     ) {
+        // TODO (if needed) paging/sorting via query string etc. - already provided by the service
         return walletService.getStatement( walletId );
     }
 
