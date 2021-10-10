@@ -1,7 +1,7 @@
 package money.wallet.api.service;
 
-import money.wallet.api.dto.WalletOperation;
-import money.wallet.api.dto.WalletStatement;
+import money.wallet.api.data.WalletOperation;
+import money.wallet.api.data.WalletStatement;
 
 public interface WalletService {
     WalletOperation createWallet();

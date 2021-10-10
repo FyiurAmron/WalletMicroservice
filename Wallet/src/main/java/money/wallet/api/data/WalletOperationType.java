@@ -1,4 +1,4 @@
-package money.wallet.api.dto;
+package money.wallet.api.data;
 
 import money.wallet.api.model.WalletTransactionType;
 

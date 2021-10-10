@@ -1,9 +1,9 @@
 package money.wallet.api.controller;
 
 import lombok.*;
-import money.wallet.api.dto.WalletOperation;
+import money.wallet.api.data.WalletOperation;
 import money.wallet.api.service.RepositoryWalletService;
-import money.wallet.api.dto.WalletStatement;
+import money.wallet.api.data.WalletStatement;
 import org.springframework.web.bind.annotation.*;
 
 // TODO return HTTP error codes as needed

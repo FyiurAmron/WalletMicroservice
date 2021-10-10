@@ -5,13 +5,14 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import money.wallet.api.dto.*;
+import javax.persistence.EntityExistsException;
+import java.util.List;
+
+import money.wallet.api.data.*;
 import money.wallet.api.model.*;
 import money.wallet.api.repository.WalletRepository;
 import money.wallet.api.repository.WalletTransactionRepository;
 import money.wallet.api.util.ExecutionTimer;
-
-import javax.persistence.EntityExistsException;
 
 @Service
 @Transactional

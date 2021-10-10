@@ -1,8 +1,8 @@
 package money.wallet.api;
 
-import money.wallet.api.dto.WalletAmount;
-import money.wallet.api.dto.WalletOperation;
-import money.wallet.api.dto.WalletOperationType;
+import money.wallet.api.data.WalletAmount;
+import money.wallet.api.data.WalletOperation;
+import money.wallet.api.data.WalletOperationType;
 import money.wallet.api.service.RepositoryWalletService;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
