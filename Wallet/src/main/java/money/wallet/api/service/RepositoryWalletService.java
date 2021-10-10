@@ -41,6 +41,8 @@ public class RepositoryWalletService implements WalletService {
         );
     }
 
+    // WalletOperation removeWallet() { /* */ }
+
     @Override
     public WalletOperation getBalance( long walletId ) {
         var executionTimer = new ExecutionTimer();

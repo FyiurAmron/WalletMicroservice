@@ -8,6 +8,8 @@ import org.springframework.data.domain.Sort;
 public interface WalletService {
     WalletOperation createWallet();
 
+    // WalletOperation removeWallet();
+
     WalletOperation getBalance( long walletId );
 
     WalletStatement getStatement( long walletId );

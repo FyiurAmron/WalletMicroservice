@@ -4,6 +4,7 @@ import money.wallet.api.model.WalletTransactionType;
 
 public enum WalletOperationType {
     CREATE( WalletTransactionType.CREATE ),
+    // REMOVE( WalletTransactionType.REMOVE ),
     BALANCE( null ),
     WITHDRAWAL( WalletTransactionType.WITHDRAWAL ),
     DEPOSIT( WalletTransactionType.DEPOSIT ),
