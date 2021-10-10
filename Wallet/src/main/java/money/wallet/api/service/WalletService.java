@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 public interface WalletService {
-    WalletOperation createWallet();
+    WalletOperation createWallet( long transactionId );
 
     // WalletOperation removeWallet();
 

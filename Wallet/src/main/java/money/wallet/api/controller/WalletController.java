@@ -14,8 +14,8 @@ public class WalletController {
     final private RepositoryWalletService walletService;
 
     @PostMapping( "/" )
-    public WalletOperation create() {
-        return walletService.createWallet();
+    public WalletOperation create( @RequestParam( value = "transactionId" ) long transactionId ) {
+        return walletService.createWallet( transactionId );
     }
 
     /*

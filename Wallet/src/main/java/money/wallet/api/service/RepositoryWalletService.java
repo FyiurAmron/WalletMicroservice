@@ -25,7 +25,7 @@ public class RepositoryWalletService implements WalletService {
     WalletTransactionRepository walletTransactionRepository;
 
     @Override
-    public WalletOperation createWallet() {
+    public WalletOperation createWallet( long transactionId ) {
         var executionTimer = new ExecutionTimer();
         var wallet = new Wallet();
         walletRepository.saveAndFlush( wallet );
@@ -37,7 +37,7 @@ public class RepositoryWalletService implements WalletService {
                 null,
                 null,
                 new WalletAmount( wallet.getBalance() ),
-                null
+                transactionId
         );
 
         WalletTransaction walletTransaction = walletOperation.toWalletTransaction();

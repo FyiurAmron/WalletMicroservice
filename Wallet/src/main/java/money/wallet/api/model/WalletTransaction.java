@@ -23,12 +23,12 @@ public class WalletTransaction {
     @Enumerated( EnumType.ORDINAL )
     WalletTransactionType type;
 
-    long amount;
+    Long amount; // null if the account is being created
 
     // usefulness of the below fields depends on the actual use case;
     // they increase DB size (and somewhat denormalize it, w.r.t. balance), but also ease management and debugging
-    long balanceBefore;
-    long balanceAfter;
+    Long balanceBefore; // null if the account is being created
+    Long balanceAfter; // null if the account is being removed
 
     Date start;
     Date stop;

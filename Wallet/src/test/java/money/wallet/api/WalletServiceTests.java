@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext( classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD )
 // alternatively, to speed things up, create a context doing a DB reset at setup
 public class WalletServiceTests {
-    private static final long EXAMPLE_TRANSACTION_ID = 0xDEAD_BEEF;
+    private static final long EXAMPLE_TRANSACTION_ID = 1337;
     private static final long EXAMPLE_AMOUNT = 42;
 
     @Autowired
@@ -73,7 +73,7 @@ public class WalletServiceTests {
 
     @Test
     public void isWalletCreatedEmpty() {
-        WalletOperation createWalletOperation = walletService.createWallet();
+        WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
 
         assertOperationResults(
                 createWalletOperation,
@@ -81,13 +81,13 @@ public class WalletServiceTests {
                 null,
                 null,
                 0L,
-                null
+                EXAMPLE_TRANSACTION_ID
         );
     }
 
     @Test
     public void isWalletBalanceZeroAfterCreation() {
-        WalletOperation createWalletOperation = walletService.createWallet();
+        WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
         WalletOperation balanceWalletOperation = walletService.getBalance( createWalletOperation.walletId() );
 
         assertOperationResults(
@@ -109,11 +109,11 @@ public class WalletServiceTests {
 
     @Test
     public void areAmountsProperlyDeposited() {
-        WalletOperation createWalletOperation = walletService.createWallet();
+        WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
         WalletOperation makeDepositWalletOperation = walletService.makeDeposit(
                 createWalletOperation.walletId(),
                 EXAMPLE_AMOUNT,
-                EXAMPLE_TRANSACTION_ID
+                EXAMPLE_TRANSACTION_ID + 1
         );
 
         assertOperationResults(
@@ -122,13 +122,13 @@ public class WalletServiceTests {
                 EXAMPLE_AMOUNT,
                 0L,
                 EXAMPLE_AMOUNT,
-                EXAMPLE_TRANSACTION_ID
+                EXAMPLE_TRANSACTION_ID + 1
         );
 
         WalletOperation makeDepositWalletResponse2 = walletService.makeDeposit(
                 createWalletOperation.walletId(),
                 EXAMPLE_AMOUNT * 2,
-                EXAMPLE_TRANSACTION_ID + 1
+                EXAMPLE_TRANSACTION_ID + 2
         );
 
         assertOperationResults(
@@ -137,23 +137,23 @@ public class WalletServiceTests {
                 EXAMPLE_AMOUNT * 2,
                 EXAMPLE_AMOUNT,
                 EXAMPLE_AMOUNT * 3,
-                EXAMPLE_TRANSACTION_ID + 1
+                EXAMPLE_TRANSACTION_ID + 2
         );
     }
 
     @Test
     public void throwsOnDepositsWithNonUniqueIds() {
-        WalletOperation createWalletOperation = walletService.createWallet();
+        WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
         WalletOperation makeDepositWalletOperation = walletService.makeDeposit(
                 createWalletOperation.walletId(),
                 EXAMPLE_AMOUNT,
-                EXAMPLE_TRANSACTION_ID
+                EXAMPLE_TRANSACTION_ID + 1
         );
         assertThrows( EntityExistsException.class, () -> {
             WalletOperation makeDepositWalletResponse2 = walletService.makeDeposit(
                     createWalletOperation.walletId(),
                     EXAMPLE_AMOUNT * 2,
-                    EXAMPLE_TRANSACTION_ID
+                    EXAMPLE_TRANSACTION_ID + 1
             );
         } );
     }

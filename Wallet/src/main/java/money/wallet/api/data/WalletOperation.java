@@ -7,10 +7,10 @@ public record WalletOperation(
         ExecutionTimer executionTimer,
         WalletOperationType type,
         long walletId,
-        WalletAmount amount,
-        WalletAmount balanceBefore,
-        WalletAmount balanceAfter,
-        Long transactionId
+        WalletAmount amount, // Optional<WalletAmount> could've been used, but that would add...
+        WalletAmount balanceBefore, // ... another abstraction layer with no real gain here -
+        WalletAmount balanceAfter, // both entity and response use null anyway
+        Long transactionId // ditto
 ) {
     public WalletOperation {
         executionTimer.stop(); // idempotent, no side effects
@@ -21,14 +21,13 @@ public record WalletOperation(
 
         walletTransaction
                 .setType( type.toWalletTransactionType() )
-                .setAmount( amount.value() )
-                .setBalanceBefore( balanceBefore.value() )
-                .setBalanceAfter( balanceAfter.value() )
+                .setAmount( amount == null ? null : amount.value() ) // see above note on Optional<>
+                .setBalanceBefore( amount == null ? null : balanceBefore.value() ) // ditto
+                .setBalanceAfter( amount == null ? null : balanceAfter.value() ) // ditto
                 .setWalletId( walletId )
                 .setId( transactionId )
                 .setStart( executionTimer.getStart() )
                 .setStop( executionTimer.getStop() );
-
 
         return walletTransaction;
     }
