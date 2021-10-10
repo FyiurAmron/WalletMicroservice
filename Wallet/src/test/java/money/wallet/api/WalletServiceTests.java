@@ -4,6 +4,7 @@ import money.wallet.api.dto.WalletAmount;
 import money.wallet.api.dto.WalletOperation;
 import money.wallet.api.dto.WalletOperationType;
 import money.wallet.api.service.RepositoryWalletService;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Tag( TestUtils.INTEGRATION_TAG )
 @SpringBootTest
 @AutoConfigureTestDatabase
 @DirtiesContext( classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD )
