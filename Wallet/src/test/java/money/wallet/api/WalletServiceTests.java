@@ -103,6 +103,13 @@ public class WalletServiceTests {
     }
 
     @Test
+    public void throwsOnCreateWithNonUniqueIds() {
+        walletService.createWallet( EXAMPLE_TRANSACTION_ID );
+        assertThrows( EntityExistsException.class, () ->
+                walletService.createWallet( EXAMPLE_TRANSACTION_ID ) );
+    }
+
+    @Test
     public void areAmountsProperlyDeposited() {
         WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
         WalletOperation makeDepositWalletOperation = walletService.makeDeposit(
@@ -149,6 +156,81 @@ public class WalletServiceTests {
                         createWalletOperation.walletId(),
                         EXAMPLE_AMOUNT * 2,
                         EXAMPLE_TRANSACTION_ID + 1
+                )
+        );
+    }
+
+    @Test
+    public void throwsOnWithdrawalsWithNonUniqueIds() {
+        WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
+        walletService.makeDeposit(
+                createWalletOperation.walletId(),
+                EXAMPLE_AMOUNT * 3,
+                EXAMPLE_TRANSACTION_ID + 1
+        );
+        walletService.makeWithdrawal(
+                createWalletOperation.walletId(),
+                EXAMPLE_AMOUNT,
+                EXAMPLE_TRANSACTION_ID + 2
+        );
+        assertThrows( EntityExistsException.class, () ->
+                walletService.makeWithdrawal(
+                        createWalletOperation.walletId(),
+                        EXAMPLE_AMOUNT,
+                        EXAMPLE_TRANSACTION_ID + 2
+                )
+        );
+    }
+
+    @Test
+    public void throwsOnMixedOpsWithNonUniqueIds() {
+        WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
+        assertThrows( EntityExistsException.class, () ->
+                walletService.createWallet( EXAMPLE_TRANSACTION_ID )
+        );
+        walletService.makeDeposit(
+                createWalletOperation.walletId(),
+                EXAMPLE_AMOUNT * 3,
+                EXAMPLE_TRANSACTION_ID + 1
+        );
+        assertThrows( EntityExistsException.class, () ->
+                walletService.makeDeposit(
+                        createWalletOperation.walletId(),
+                        EXAMPLE_AMOUNT * 3,
+                        EXAMPLE_TRANSACTION_ID // used by create
+                )
+        );
+        assertThrows( EntityExistsException.class, () ->
+                walletService.makeDeposit(
+                        createWalletOperation.walletId(),
+                        EXAMPLE_AMOUNT * 3,
+                        EXAMPLE_TRANSACTION_ID + 1 // used by deposit
+                )
+        );
+        walletService.makeWithdrawal(
+                createWalletOperation.walletId(),
+                EXAMPLE_AMOUNT,
+                EXAMPLE_TRANSACTION_ID + 2
+        );
+        assertThrows( EntityExistsException.class, () ->
+                walletService.makeWithdrawal(
+                        createWalletOperation.walletId(),
+                        EXAMPLE_AMOUNT,
+                        EXAMPLE_TRANSACTION_ID // used by create
+                )
+        );
+        assertThrows( EntityExistsException.class, () ->
+                walletService.makeWithdrawal(
+                        createWalletOperation.walletId(),
+                        EXAMPLE_AMOUNT,
+                        EXAMPLE_TRANSACTION_ID + 1 // used by deposit
+                )
+        );
+        assertThrows( EntityExistsException.class, () ->
+                walletService.makeWithdrawal(
+                        createWalletOperation.walletId(),
+                        EXAMPLE_AMOUNT,
+                        EXAMPLE_TRANSACTION_ID + 2 // used by withdrawal
                 )
         );
     }
