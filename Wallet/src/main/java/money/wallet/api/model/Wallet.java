@@ -1,0 +1,23 @@
+package money.wallet.api.model;
+
+import lombok.*;
+import javax.persistence.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+public class Wallet {
+    @Id
+    @GeneratedValue
+    @Setter(AccessLevel.PROTECTED)
+    Long id;
+    /*
+    // `Isolation.SERIALIZABLE` used instead due to expected large amounts of concurrent DB writes
+    @Version
+    @Setter(AccessLevel.PROTECTED)
+    Integer version;
+     */
+
+    long balance;
+}
