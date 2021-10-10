@@ -25,7 +25,7 @@ public class WalletController {
     }
     */
 
-    @GetMapping( "/{walletId}/balance" )
+    @GetMapping( "/{walletId}" )
     public WalletOperation balance(
             @PathVariable( value = "walletId" ) long walletId
     ) {
