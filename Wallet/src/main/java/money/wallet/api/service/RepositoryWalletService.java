@@ -24,9 +24,17 @@ public class RepositoryWalletService implements WalletService {
     WalletRepository walletRepository;
     WalletTransactionRepository walletTransactionRepository;
 
+    private void verifyThatTransactionIdIsUnique( long transactionId ) {
+        if ( walletTransactionRepository.existsById( transactionId ) ) {
+            throw new EntityExistsException( "wallet transaction with ID '" + transactionId
+                                                     + "' already present in DB" );
+        }
+    }
+
     @Override
     public WalletOperation createWallet( long transactionId ) {
         var executionTimer = new ExecutionTimer();
+        verifyThatTransactionIdIsUnique( transactionId );
         var wallet = new Wallet();
         walletRepository.saveAndFlush( wallet );
 
@@ -85,11 +93,7 @@ public class RepositoryWalletService implements WalletService {
 
     private WalletOperation modifyWalletAmount( long walletId, long amount, long transactionId, boolean isDeposit ) {
         var executionTimer = new ExecutionTimer();
-        if ( walletTransactionRepository.existsById( transactionId ) ) {
-            throw new EntityExistsException( "wallet transaction with ID '" + transactionId
-                                                     + "' already present in DB" );
-        }
-
+        verifyThatTransactionIdIsUnique( transactionId );
         Wallet wallet = walletRepository.getById( walletId );
         WalletAmount oldBalance = WalletAmount.from( wallet );
         WalletAmount changeAmount = new WalletAmount( amount );
