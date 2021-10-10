@@ -11,6 +11,8 @@ import money.wallet.api.repository.WalletRepository;
 import money.wallet.api.repository.WalletTransactionRepository;
 import money.wallet.api.util.ExecutionTimer;
 
+import javax.persistence.EntityExistsException;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -20,48 +22,52 @@ public class RepositoryWalletService implements WalletService {
     WalletTransactionRepository walletTransactionRepository;
 
     @Override
-    public WalletResponse createWallet() {
+    public WalletOperation createWallet() {
         var executionTimer = new ExecutionTimer();
         var wallet = new Wallet();
         walletRepository.saveAndFlush( wallet );
-        executionTimer.stop();
 
-        return new WalletResponse(
+        return new WalletOperation(
+                executionTimer,
+                WalletOperationType.CREATE,
                 wallet.getId(),
-                new WalletOperation( WalletOperationType.CREATE ),
                 null,
-                WalletAmount.from( wallet ),
-                executionTimer
+                null,
+                new WalletAmount( wallet.getBalance() ),
+                null
         );
     }
 
     @Override
-    public WalletResponse getBalance( long walletId ) {
+    public WalletOperation getBalance( long walletId ) {
         var executionTimer = new ExecutionTimer();
         Wallet wallet = walletRepository.getById( walletId );
         WalletAmount walletBalance = WalletAmount.from( wallet );
-        executionTimer.stop();
 
-        return new WalletResponse(
+        return new WalletOperation(
+                executionTimer,
+                WalletOperationType.BALANCE,
                 wallet.getId(),
-                new WalletOperation( WalletOperationType.BALANCE ),
+                null,
                 walletBalance,
                 walletBalance,
-                executionTimer
+                null
         );
     }
 
     @Override
     public WalletStatement getStatement( long walletId ) {
-        // TODO paging/sorting
+        // TODO paging/sorting (if needed)
         return new WalletStatement();
     }
 
-    private WalletResponse modifyWalletAmount( long walletId, long amount, long transactionId, boolean isDeposit ) {
+    private WalletOperation modifyWalletAmount( long walletId, long amount, long transactionId, boolean isDeposit ) {
         var executionTimer = new ExecutionTimer();
         if ( walletTransactionRepository.existsById( transactionId ) ) {
-            throw new IllegalStateException();
+            throw new EntityExistsException( "wallet transaction with ID '" + transactionId
+                                                     + "' already present in DB" );
         }
+
         Wallet wallet = walletRepository.getById( walletId );
         WalletAmount oldBalance = WalletAmount.from( wallet );
         WalletAmount changeAmount = new WalletAmount( amount );
@@ -69,28 +75,33 @@ public class RepositoryWalletService implements WalletService {
                 ? oldBalance.increaseBy( changeAmount )
                 : oldBalance.decreaseBy( changeAmount );
         wallet.setBalance( newBalance.value() );
-        walletRepository.saveAndFlush( wallet );
-        // TODO add WalletTransaction entry
-        executionTimer.stop();
 
-        return new WalletResponse(
+        var walletOperation = new WalletOperation(
+                executionTimer,
+                isDeposit
+                        ? WalletOperationType.DEPOSIT
+                        : WalletOperationType.WITHDRAWAL,
                 wallet.getId(),
-                new WalletOperation( isDeposit ? WalletOperationType.DEPOSIT : WalletOperationType.WITHDRAWAL ),
+                changeAmount,
                 oldBalance,
                 newBalance,
-                executionTimer
+                transactionId
         );
+        WalletTransaction walletTransaction = walletOperation.toWalletTransaction();
+        walletTransactionRepository.saveAndFlush( walletTransaction );
+
+        return walletOperation;
     }
 
     @Override
     @Transactional( isolation = Isolation.SERIALIZABLE )
-    public WalletResponse makeDeposit( long walletId, long amount, long transactionId ) {
+    public WalletOperation makeDeposit( long walletId, long amount, long transactionId ) {
         return modifyWalletAmount( walletId, amount, transactionId, true );
     }
 
     @Override
     @Transactional( isolation = Isolation.SERIALIZABLE )
-    public WalletResponse makeWithdrawal( long walletId, long amount, long transactionId ) {
+    public WalletOperation makeWithdrawal( long walletId, long amount, long transactionId ) {
         return modifyWalletAmount( walletId, amount, transactionId, false );
     }
 }

@@ -1,8 +1,20 @@
 package money.wallet.api.dto;
 
+import money.wallet.api.model.WalletTransactionType;
+
 public enum WalletOperationType {
-    CREATE,
-    BALANCE,
-    WITHDRAWAL,
-    DEPOSIT,
+    CREATE( WalletTransactionType.CREATE ),
+    BALANCE( null ),
+    WITHDRAWAL( WalletTransactionType.WITHDRAWAL ),
+    DEPOSIT( WalletTransactionType.DEPOSIT ),
+    ;
+    WalletTransactionType walletTransactionType;
+
+    WalletOperationType( WalletTransactionType walletTransactionType ) {
+        this.walletTransactionType = walletTransactionType;
+    }
+
+    WalletTransactionType toWalletTransactionType() {
+        return walletTransactionType;
+    }
 }

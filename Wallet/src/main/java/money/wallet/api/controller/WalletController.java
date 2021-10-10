@@ -1,8 +1,8 @@
 package money.wallet.api.controller;
 
 import lombok.*;
+import money.wallet.api.dto.WalletOperation;
 import money.wallet.api.service.RepositoryWalletService;
-import money.wallet.api.dto.WalletResponse;
 import money.wallet.api.dto.WalletStatement;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,7 @@ public class WalletController {
     final private RepositoryWalletService walletService;
 
     @PostMapping( "/" )
-    public WalletResponse create() {
+    public WalletOperation create() {
         return walletService.createWallet();
     }
 
@@ -26,7 +26,7 @@ public class WalletController {
     */
 
     @GetMapping( "/{walletId}/balance" )
-    public WalletResponse balance(
+    public WalletOperation balance(
             @PathVariable( value = "walletId" ) long walletId
     ) {
         return walletService.getBalance( walletId );
@@ -40,7 +40,7 @@ public class WalletController {
     }
 
     @PostMapping( "/{walletId}/deposit" )
-    public WalletResponse deposit(
+    public WalletOperation deposit(
             @PathVariable( value = "walletId" ) long walletId,
             @RequestParam( value = "amount" ) long amount,
             @RequestParam( value = "transactionId" ) long transactionId
@@ -49,7 +49,7 @@ public class WalletController {
     }
 
     @PostMapping( "/{walletId}/withdrawal" )
-    public WalletResponse withdrawal(
+    public WalletOperation withdrawal(
             @PathVariable( value = "walletId" ) long walletId,
             @RequestParam( value = "amount" ) long amount,
             @RequestParam( value = "transactionId" ) long transactionId

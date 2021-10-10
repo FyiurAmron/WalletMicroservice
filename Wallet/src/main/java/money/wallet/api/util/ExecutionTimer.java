@@ -13,8 +13,14 @@ public class ExecutionTimer implements AutoCloseable {
         start = new Date();
     }
 
+    /**
+     * Idempotent.
+     * @return time passed from start to stop in ms
+     */
     public long stop() {
-        stop = new Date();
+        if ( stop == null ) {
+            stop = new Date();
+        }
         return stop.getTime() - start.getTime();
     }
 

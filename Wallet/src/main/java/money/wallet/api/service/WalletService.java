@@ -1,16 +1,16 @@
 package money.wallet.api.service;
 
-import money.wallet.api.dto.WalletResponse;
+import money.wallet.api.dto.WalletOperation;
 import money.wallet.api.dto.WalletStatement;
 
 public interface WalletService {
-    WalletResponse createWallet();
+    WalletOperation createWallet();
 
-    WalletResponse getBalance( long walletId );
+    WalletOperation getBalance( long walletId );
 
     WalletStatement getStatement( long walletId );
 
-    WalletResponse makeDeposit( long walletId, long amount, long transactionId );
+    WalletOperation makeDeposit( long walletId, long amount, long transactionId );
 
-    WalletResponse makeWithdrawal( long walletId, long amount, long transactionId );
+    WalletOperation makeWithdrawal( long walletId, long amount, long transactionId );
 }

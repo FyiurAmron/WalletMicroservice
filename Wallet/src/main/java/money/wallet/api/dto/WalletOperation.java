@@ -1,10 +1,28 @@
 package money.wallet.api.dto;
 
+import money.wallet.api.model.WalletTransaction;
+import money.wallet.api.util.ExecutionTimer;
+
 public record WalletOperation(
-        WalletOperationType walletOperationType,
-        long operationAmount
+        ExecutionTimer executionTimer,
+        WalletOperationType type,
+        long walletId,
+        WalletAmount amount,
+        WalletAmount balanceBefore,
+        WalletAmount balanceAfter,
+        Long transactionId
 ) {
-    public WalletOperation( WalletOperationType walletOperationType ) {
-        this( walletOperationType, 0L );
+    public WalletOperation {
+        executionTimer.stop(); // idempotent, no side effects
+    }
+
+    public WalletTransaction toWalletTransaction() {
+        var walletTransaction = new WalletTransaction();
+        walletTransaction.setType( type.toWalletTransactionType() );
+        walletTransaction.setAmount( amount.value() );
+        walletTransaction.setBalanceAfter( balanceAfter.value() );
+        walletTransaction.setWalletId( walletId );
+        walletTransaction.setId( transactionId );
+        return walletTransaction;
     }
 }
