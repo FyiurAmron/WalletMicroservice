@@ -30,7 +30,7 @@ public class RepositoryWalletService implements WalletService {
         var wallet = new Wallet();
         walletRepository.saveAndFlush( wallet );
 
-        return new WalletOperation(
+        var walletOperation = new WalletOperation(
                 executionTimer,
                 WalletOperationType.CREATE,
                 wallet.getId(),
@@ -39,6 +39,11 @@ public class RepositoryWalletService implements WalletService {
                 new WalletAmount( wallet.getBalance() ),
                 null
         );
+
+        WalletTransaction walletTransaction = walletOperation.toWalletTransaction();
+        walletTransactionRepository.saveAndFlush( walletTransaction );
+
+        return walletOperation;
     }
 
     // WalletOperation removeWallet() { /* */ }
