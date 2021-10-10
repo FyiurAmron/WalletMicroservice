@@ -3,5 +3,10 @@ pluginManagement {
         maven { url 'https://repo.spring.io/milestone' }
         gradlePluginPortal()
     }
+
+    plugins {
+        id 'org.springframework.boot' version springVersion
+        id "io.freefair.lombok" version lombokPluginVersion
+    }
 }
 rootProject.name = 'api'
