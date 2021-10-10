@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 import money.wallet.api.data.*;
@@ -73,22 +74,26 @@ public class RepositoryWalletService implements WalletService {
         );
     }
 
+    private WalletStatement toWalletStatement(List<WalletTransaction> walletTransactionList ) {
+        if ( walletTransactionList.size() == 0 ) {
+            throw new EntityNotFoundException();
+        }
+        return WalletStatement.fromWalletTransactions( walletTransactionList );
+    }
+
     @Override
     public WalletStatement getStatement( long walletId ) {
-        List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId );
-        return WalletStatement.fromWalletTransactions( walletTransactions );
+        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId ) );
     }
 
     @Override
     public WalletStatement getStatement( long walletId, Sort sort ) {
-        List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId, sort );
-        return WalletStatement.fromWalletTransactions( walletTransactions );
+        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId, sort ) );
     }
 
     @Override
     public WalletStatement getStatement( long walletId, Pageable pageable ) {
-        List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId, pageable );
-        return WalletStatement.fromWalletTransactions( walletTransactions );
+        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId, pageable ) );
     }
 
     private WalletOperation modifyWalletAmount( long walletId, long amount, long transactionId, boolean isDeposit ) {
