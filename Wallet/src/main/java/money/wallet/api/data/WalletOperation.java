@@ -22,8 +22,8 @@ public record WalletOperation(
         walletTransaction
                 .setType( type.toWalletTransactionType() )
                 .setAmount( amount == null ? null : amount.value() ) // see above note on Optional<>
-                .setBalanceBefore( amount == null ? null : balanceBefore.value() ) // ditto
-                .setBalanceAfter( amount == null ? null : balanceAfter.value() ) // ditto
+                .setBalanceBefore( balanceBefore == null ? null : balanceBefore.value() ) // ditto
+                .setBalanceAfter( balanceAfter == null ? null : balanceAfter.value() ) // ditto
                 .setWalletId( walletId )
                 .setId( transactionId )
                 .setStart( executionTimer.getStart() )
