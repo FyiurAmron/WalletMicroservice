@@ -4,7 +4,9 @@ import money.wallet.api.exception.IllegalWalletAmountException;
 import money.wallet.api.model.Wallet;
 
 /**
- * In case we have to add currencies, formatting etc. later on.
+ * VO representing a wallet amount (balance/deposit/withdrawal etc.) as a natural number (currently).
+ * Useful in case we have to add currencies, formatting etc. later on,
+ * or if needed to e.g. just treat it as fixed point non-integral number.
  */
 public record WalletAmount( long value ) {
     public static final WalletAmount ZERO = new WalletAmount( 0 );
