@@ -76,19 +76,19 @@ public class RepositoryWalletService implements WalletService {
     @Override
     public WalletStatement getStatement( long walletId ) {
         List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId );
-        return new WalletStatement( walletTransactions );
+        return WalletStatement.fromWalletTransactions( walletTransactions );
     }
 
     @Override
     public WalletStatement getStatement( long walletId, Sort sort ) {
         List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId, sort );
-        return new WalletStatement( walletTransactions );
+        return WalletStatement.fromWalletTransactions( walletTransactions );
     }
 
     @Override
     public WalletStatement getStatement( long walletId, Pageable pageable ) {
         List<WalletTransaction> walletTransactions = walletTransactionRepository.findAllByWalletId( walletId, pageable );
-        return new WalletStatement( walletTransactions );
+        return WalletStatement.fromWalletTransactions( walletTransactions );
     }
 
     private WalletOperation modifyWalletAmount( long walletId, long amount, long transactionId, boolean isDeposit ) {
