@@ -18,6 +18,8 @@ class WalletWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                     .authorizeRequests().anyRequest().authenticated()
+                    .and().headers().frameOptions().sameOrigin()
                     .and().httpBasic();
+
     }
 }
