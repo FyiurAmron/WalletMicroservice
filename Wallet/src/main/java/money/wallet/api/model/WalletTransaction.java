@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import money.wallet.api.dto.WalletAmount;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -25,6 +26,12 @@ public class WalletTransaction {
     WalletTransactionType type;
 
     long amount;
+
+    // usefulness of the below fields depends on the actual use case;
+    // they increase DB size (and somewhat denormalize it, w.r.t. balance), but also ease management and debugging
     long balanceBefore;
     long balanceAfter;
+
+    Date start;
+    Date stop;
 }

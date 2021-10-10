@@ -18,11 +18,15 @@ public record WalletOperation(
 
     public WalletTransaction toWalletTransaction() {
         var walletTransaction = new WalletTransaction();
+
         walletTransaction.setType( type.toWalletTransactionType() );
         walletTransaction.setAmount( amount.value() );
         walletTransaction.setBalanceAfter( balanceAfter.value() );
         walletTransaction.setWalletId( walletId );
         walletTransaction.setId( transactionId );
+        walletTransaction.setStart( executionTimer.getStart() );
+        walletTransaction.setStop( executionTimer.getStop() );
+
         return walletTransaction;
     }
 }
