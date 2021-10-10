@@ -22,6 +22,7 @@ public record WalletOperation(
         walletTransaction
                 .setType( type.toWalletTransactionType() )
                 .setAmount( amount.value() )
+                .setBalanceBefore( balanceBefore.value() )
                 .setBalanceAfter( balanceAfter.value() )
                 .setWalletId( walletId )
                 .setId( transactionId )

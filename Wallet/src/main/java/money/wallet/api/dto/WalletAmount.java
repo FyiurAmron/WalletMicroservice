@@ -31,7 +31,7 @@ public record WalletAmount( long value ) {
 
     public WalletAmount increaseBy( WalletAmount walletAmount ) {
         walletAmount.requireNonZero();
-        long newValue = walletAmount.value + value;
+        long newValue = value + walletAmount.value;
         if ( newValue > MAX_AMOUNT ) {
             throw new IllegalArgumentException(
                     "new value '" + value + "' > MAX_AMOUNT '" + MAX_AMOUNT + "'" );
@@ -41,7 +41,7 @@ public record WalletAmount( long value ) {
 
     public WalletAmount decreaseBy( WalletAmount walletAmount ) {
         walletAmount.requireNonZero();
-        long newValue = walletAmount.value - value;
+        long newValue = value - walletAmount.value;
         if ( newValue < 0 ) {
             throw new IllegalArgumentException(
                     "new value '" + value + "' < 0" );
