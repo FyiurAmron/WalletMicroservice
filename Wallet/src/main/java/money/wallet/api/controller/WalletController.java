@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class WalletController {
     final private RepositoryWalletService walletService;
 
-    @PostMapping( "/" )
+    @PostMapping( "" )
     public WalletOperation create( @RequestParam( value = "transactionId" ) long transactionId ) {
         return walletService.createWallet( transactionId );
     }
