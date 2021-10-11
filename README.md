@@ -14,7 +14,7 @@ to limit/restrict possible external operations
 extraneous logs (including exception/error messages) are emitted etc. When the solution
 goes into production environment, all such parts emitting either verbose or sensitive
 information should be disabled by e.g. `application.properties`
-* Implementation of hashCode()/equals() for DTO/entities may be needed in the future,
+* Implementation of hashCode()/equals() for entities may be needed in the future,
 depending on exact use cases
 * Scalability of the solution can be achieved by e.g. switching from embedded to external
 database, running the service on parallel k8s pods, using a load balancer etc. 
@@ -25,11 +25,12 @@ actually disk-based H2 (as it is in current configuration)
 * MVC integration/acceptance tests with @WebMvcTest & @AutoConfigureMockMvc are certainly
 possible, but due to the thin controller design would add little to real localized testability.
 API tests via external API consumer would be preferred (omitted due to scope of the project).
+@AutoConfigureRestDocs can be used to improve the usability of those tests. 
 
 common URLs / access paths
 --------------------------
 
-* H2 console @ http://localhost:8080/h2-console
 * healthcheck/heartbeat @ http://localhost:8080/actuator/health
-* Swagger @ http://localhost:8080/swagger-ui.html
+* Swagger API docs @ http://localhost:8080/swagger-ui.html
+* H2 console @ http://localhost:8080/h2-console
 * OpenAPI v3 @ http://localhost:8080/openapi-docs
