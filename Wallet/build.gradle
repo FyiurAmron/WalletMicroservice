@@ -47,6 +47,9 @@ test {
     outputs.dir snippetsDir
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     useJUnitPlatform()
+    testLogging {
+        events "PASSED", "SKIPPED", "FAILED"
+    }
 }
 
 asciidoctor {
