@@ -9,4 +9,4 @@ pluginManagement {
         id "io.freefair.lombok" version lombokPluginVersion
     }
 }
-rootProject.name = 'api'
+rootProject.name = 'wallet'
