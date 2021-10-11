@@ -13,8 +13,14 @@ public class ExecutionTimer implements AutoCloseable {
         start = new Date();
     }
 
+    public ExecutionTimer( Date start, Date stop ) {
+        this.start = start;
+        this.stop = stop;
+    }
+
     /**
      * Idempotent.
+     *
      * @return time passed from start to stop in ms
      */
     public long stop() {

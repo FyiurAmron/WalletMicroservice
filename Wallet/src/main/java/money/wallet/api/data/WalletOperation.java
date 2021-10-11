@@ -21,14 +21,26 @@ public record WalletOperation(
 
         walletTransaction
                 .setType( type.toWalletTransactionType() )
-                .setAmount( amount == null ? null : amount.value() ) // see above note on Optional<>
-                .setBalanceBefore( balanceBefore == null ? null : balanceBefore.value() ) // ditto
-                .setBalanceAfter( balanceAfter == null ? null : balanceAfter.value() ) // ditto
+                .setAmount( WalletAmount.toLong( amount ) ) // see above note on Optional<>
+                .setBalanceBefore( WalletAmount.toLong( balanceBefore ) ) // ditto
+                .setBalanceAfter( WalletAmount.toLong( balanceAfter ) ) // ditto
                 .setWalletId( walletId )
                 .setId( transactionId )
                 .setStart( executionTimer.getStart() )
                 .setStop( executionTimer.getStop() );
 
         return walletTransaction;
+    }
+
+    public static WalletOperation fromWalletTransaction( WalletTransaction walletTransaction ) {
+        return new WalletOperation(
+                new ExecutionTimer( walletTransaction.getStart(), walletTransaction.getStop() ),
+                WalletOperationType.from( walletTransaction.getType() ),
+                walletTransaction.getWalletId(),
+                WalletAmount.from( walletTransaction.getAmount() ),
+                WalletAmount.from( walletTransaction.getBalanceBefore() ),
+                WalletAmount.from( walletTransaction.getBalanceAfter() ),
+                walletTransaction.getId()
+        );
     }
 }

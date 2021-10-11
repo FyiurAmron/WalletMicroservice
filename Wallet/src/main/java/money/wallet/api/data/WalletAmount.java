@@ -17,6 +17,14 @@ public record WalletAmount( long value ) {
         return new WalletAmount( wallet.getBalance() );
     }
 
+    public static WalletAmount from( Long amount ) {
+        return amount == null ? null : new WalletAmount( amount );
+    }
+
+    public static Long toLong( WalletAmount walletAmount ) {
+        return walletAmount == null ? null : walletAmount.value;
+    }
+
     public WalletAmount {
         if ( value < 0 ) {
             throw new IllegalWalletAmountException( "value '" + value + "' < 0" );

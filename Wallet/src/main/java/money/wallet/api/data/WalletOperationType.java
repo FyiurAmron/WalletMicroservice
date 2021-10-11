@@ -2,6 +2,9 @@ package money.wallet.api.data;
 
 import money.wallet.api.model.WalletTransactionType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum WalletOperationType {
     CREATE( WalletTransactionType.CREATE ),
     // REMOVE( WalletTransactionType.REMOVE ),
@@ -10,12 +13,23 @@ public enum WalletOperationType {
     DEPOSIT( WalletTransactionType.DEPOSIT ),
     ;
     WalletTransactionType walletTransactionType;
+    static final Map<WalletTransactionType, WalletOperationType> typeMap = new HashMap<>();
 
     WalletOperationType( WalletTransactionType walletTransactionType ) {
         this.walletTransactionType = walletTransactionType;
     }
 
-    WalletTransactionType toWalletTransactionType() {
+    static {
+        for ( var wot : values() ) {
+            typeMap.put( wot.walletTransactionType, wot );
+        }
+    }
+
+    public static WalletOperationType from( WalletTransactionType walletTransactionType ) {
+        return typeMap.get( walletTransactionType );
+    }
+
+    public WalletTransactionType toWalletTransactionType() {
         return walletTransactionType;
     }
 }

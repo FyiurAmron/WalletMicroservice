@@ -13,7 +13,6 @@ import java.util.List;
 
 import money.wallet.api.data.*;
 import money.wallet.api.exception.IllegalWalletAmountException;
-import money.wallet.api.model.WalletTransactionType;
 import money.wallet.api.service.RepositoryWalletService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,36 +65,6 @@ public class WalletServiceTests {
         assertEquals(
                 transactionId,
                 walletOperation.transactionId()
-        );
-    }
-
-    private void assertWalletTransactionViewValues(
-            WalletTransactionView walletTransactionView,
-            WalletTransactionType type,
-            Long amount,
-            Long balanceBefore,
-            Long balanceAfter,
-            Long transactionId
-    ) {
-        assertEquals(
-                type,
-                walletTransactionView.type()
-        );
-        assertEquals(
-                amount,
-                walletTransactionView.amount()
-        );
-        assertEquals(
-                balanceBefore,
-                walletTransactionView.balanceBefore()
-        );
-        assertEquals(
-                balanceAfter,
-                walletTransactionView.balanceAfter()
-        );
-        assertEquals(
-                transactionId,
-                walletTransactionView.transactionId()
         );
     }
 
@@ -478,35 +447,35 @@ public class WalletServiceTests {
 
         WalletStatement walletStatement = walletService.getStatement( createWalletOperation.walletId() );
 
-        List<WalletTransactionView> walletTransactionViewLists = walletStatement.walletTransactionViewList();
+        List<WalletOperation> walletTransactionViewLists = walletStatement.walletStatementItems();
         assertEquals( 4, walletTransactionViewLists.size() );
-        assertWalletTransactionViewValues(
+        assertOperationResults(
                 walletTransactionViewLists.get( 0 ),
-                WalletTransactionType.CREATE,
+                WalletOperationType.CREATE,
                 null,
                 null,
                 0L,
                 EXAMPLE_TRANSACTION_ID
         );
-        assertWalletTransactionViewValues(
+        assertOperationResults(
                 walletTransactionViewLists.get( 1 ),
-                WalletTransactionType.DEPOSIT,
+                WalletOperationType.DEPOSIT,
                 EXAMPLE_AMOUNT * 9,
                 0L,
                 EXAMPLE_AMOUNT * 9,
                 EXAMPLE_TRANSACTION_ID + 1
         );
-        assertWalletTransactionViewValues(
+        assertOperationResults(
                 walletTransactionViewLists.get( 2 ),
-                WalletTransactionType.WITHDRAWAL,
+                WalletOperationType.WITHDRAWAL,
                 EXAMPLE_AMOUNT * 3,
                 EXAMPLE_AMOUNT * 9,
                 EXAMPLE_AMOUNT * 6,
                 EXAMPLE_TRANSACTION_ID + 2
         );
-        assertWalletTransactionViewValues(
+        assertOperationResults(
                 walletTransactionViewLists.get( 3 ),
-                WalletTransactionType.WITHDRAWAL,
+                WalletOperationType.WITHDRAWAL,
                 EXAMPLE_AMOUNT * 2,
                 EXAMPLE_AMOUNT * 6,
                 EXAMPLE_AMOUNT * 4,
