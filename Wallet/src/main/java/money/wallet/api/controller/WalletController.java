@@ -1,10 +1,11 @@
 package money.wallet.api.controller;
 
 import lombok.*;
+import org.springframework.web.bind.annotation.*;
 import money.wallet.api.data.WalletOperation;
+import money.wallet.api.exception.*;
 import money.wallet.api.service.RepositoryWalletService;
 import money.wallet.api.data.WalletStatement;
-import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -12,8 +13,12 @@ import org.springframework.web.bind.annotation.*;
 public class WalletController {
     final private RepositoryWalletService walletService;
 
+    // TODO document @ApiResponses etc.
+
     @PostMapping( "" )
-    public WalletOperation create( @RequestParam( value = "transactionId" ) long transactionId ) {
+    public WalletOperation create(
+            @RequestParam( value = "transactionId" ) long transactionId
+    ) throws TransactionIdAlreadyExistsException {
         return walletService.createWallet( transactionId );
     }
 
@@ -27,14 +32,14 @@ public class WalletController {
     @GetMapping( "/{walletId}" )
     public WalletOperation balance(
             @PathVariable( value = "walletId" ) long walletId
-    ) {
+    ) throws WalletIdNotFoundException {
         return walletService.getBalance( walletId );
     }
 
     @GetMapping( "/{walletId}/statement" )
     public WalletStatement statement(
             @PathVariable( value = "walletId" ) long walletId
-    ) {
+    ) throws WalletIdNotFoundException {
         // TODO (if needed) paging/sorting via query string etc. - already provided by the service
         return walletService.getStatement( walletId );
     }
@@ -44,7 +49,9 @@ public class WalletController {
             @PathVariable( value = "walletId" ) long walletId,
             @RequestParam( value = "amount" ) long amount,
             @RequestParam( value = "transactionId" ) long transactionId
-    ) {
+    ) throws WalletIdNotFoundException,
+             IllegalOperationAmountException,
+             TransactionIdAlreadyExistsException {
         return walletService.makeDeposit( walletId, amount, transactionId );
     }
 
@@ -53,7 +60,9 @@ public class WalletController {
             @PathVariable( value = "walletId" ) long walletId,
             @RequestParam( value = "amount" ) long amount,
             @RequestParam( value = "transactionId" ) long transactionId
-    ) {
+    ) throws WalletIdNotFoundException,
+             IllegalOperationAmountException,
+             TransactionIdAlreadyExistsException {
         return walletService.makeWithdrawal( walletId, amount, transactionId );
     }
 }

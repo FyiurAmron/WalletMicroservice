@@ -12,7 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 import money.wallet.api.data.*;
-import money.wallet.api.exception.IllegalWalletAmountException;
+import money.wallet.api.exception.IllegalOperationAmountException;
 import money.wallet.api.service.RepositoryWalletService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -176,7 +176,7 @@ public class WalletServiceTests {
     public void throwsOnNegativeDeposits() {
         WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
 
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletService.makeDeposit(
                         createWalletOperation.walletId(),
                         -EXAMPLE_AMOUNT,
@@ -189,7 +189,7 @@ public class WalletServiceTests {
     public void throwsOnZeroDeposits() {
         WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
 
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletService.makeDeposit(
                         createWalletOperation.walletId(),
                         0,
@@ -208,7 +208,7 @@ public class WalletServiceTests {
                 EXAMPLE_TRANSACTION_ID + 1
         );
 
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletService.makeWithdrawal(
                         createWalletOperation.walletId(),
                         -EXAMPLE_AMOUNT,
@@ -227,7 +227,7 @@ public class WalletServiceTests {
                 EXAMPLE_TRANSACTION_ID + 1
         );
 
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletService.makeWithdrawal(
                         createWalletOperation.walletId(),
                         0,
@@ -320,7 +320,7 @@ public class WalletServiceTests {
                 EXAMPLE_TRANSACTION_ID + 1
         );
 
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletService.makeWithdrawal(
                         createWalletOperation.walletId(),
                         EXAMPLE_AMOUNT * 2 + 1,
@@ -334,7 +334,7 @@ public class WalletServiceTests {
                 EXAMPLE_TRANSACTION_ID + 2
         );
 
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletService.makeWithdrawal(
                         createWalletOperation.walletId(),
                         EXAMPLE_AMOUNT + 1,
@@ -370,7 +370,7 @@ public class WalletServiceTests {
     public void throwsOnBalanceMaximumExceeded() {
         WalletOperation createWalletOperation = walletService.createWallet( EXAMPLE_TRANSACTION_ID );
 
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletService.makeDeposit(
                         createWalletOperation.walletId(),
                         WalletAmount.MAX_AMOUNT + 1,
@@ -384,7 +384,7 @@ public class WalletServiceTests {
                 EXAMPLE_TRANSACTION_ID + 1
         );
 
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletService.makeDeposit(
                         createWalletOperation.walletId(),
                         1,

@@ -1,6 +1,6 @@
 package money.wallet.api.data;
 
-import money.wallet.api.exception.IllegalWalletAmountException;
+import money.wallet.api.exception.IllegalOperationAmountException;
 import money.wallet.api.model.Wallet;
 
 /**
@@ -27,16 +27,16 @@ public record WalletAmount( long value ) {
 
     public WalletAmount {
         if ( value < 0 ) {
-            throw new IllegalWalletAmountException( "value '" + value + "' < 0" );
+            throw new IllegalOperationAmountException( "value '" + value + "' < 0" );
         }
         if ( value > MAX_AMOUNT ) {
-            throw new IllegalWalletAmountException( "value '" + value + "' > MAX_AMOUNT '" + MAX_AMOUNT + "'" );
+            throw new IllegalOperationAmountException( "value '" + value + "' > MAX_AMOUNT '" + MAX_AMOUNT + "'" );
         }
     }
 
     private void requireNonZero() {
         if ( value == 0 ) {
-            throw new IllegalWalletAmountException( "value '" + value + "' == 0" );
+            throw new IllegalOperationAmountException( "value '" + value + "' == 0" );
         }
     }
 
@@ -44,7 +44,7 @@ public record WalletAmount( long value ) {
         walletAmount.requireNonZero();
         long newValue = value + walletAmount.value;
         if ( newValue > MAX_AMOUNT ) {
-            throw new IllegalWalletAmountException(
+            throw new IllegalOperationAmountException(
                     "new value '" + value + "' > MAX_AMOUNT '" + MAX_AMOUNT + "'" );
         }
         return new WalletAmount( newValue );
@@ -54,7 +54,7 @@ public record WalletAmount( long value ) {
         walletAmount.requireNonZero();
         long newValue = value - walletAmount.value;
         if ( newValue < 0 ) {
-            throw new IllegalWalletAmountException(
+            throw new IllegalOperationAmountException(
                     "new value '" + value + "' < 0" );
         }
         return new WalletAmount( newValue );

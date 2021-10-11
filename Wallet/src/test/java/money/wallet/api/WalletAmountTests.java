@@ -1,7 +1,7 @@
 package money.wallet.api;
 
 import money.wallet.api.data.*;
-import money.wallet.api.exception.IllegalWalletAmountException;
+import money.wallet.api.exception.IllegalOperationAmountException;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +21,14 @@ public class WalletAmountTests {
 
     @Test
     public void throwsOnNegativeAmountCreation() {
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 new WalletAmount( -EXAMPLE_AMOUNT )
         );
     }
 
     @Test
     public void throwsOnTooLargeAmountCreation() {
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 new WalletAmount( WalletAmount.MAX_AMOUNT + 1 )
         );
     }
@@ -36,7 +36,7 @@ public class WalletAmountTests {
     @Test
     public void throwsOnTooLargeResultingAmount() {
         var walletAmount = new WalletAmount( WalletAmount.MAX_AMOUNT );
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletAmount.increaseBy( new WalletAmount( 1 ) )
         );
     }
@@ -44,7 +44,7 @@ public class WalletAmountTests {
     @Test
     public void throwsOnZeroIncrease() {
         var walletAmount = new WalletAmount( EXAMPLE_AMOUNT );
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletAmount.increaseBy( WalletAmount.ZERO )
         );
     }
@@ -52,7 +52,7 @@ public class WalletAmountTests {
     @Test
     public void throwsOnZeroDecrease() {
         var walletAmount = new WalletAmount( EXAMPLE_AMOUNT );
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletAmount.increaseBy( WalletAmount.ZERO )
         );
     }
@@ -96,7 +96,7 @@ public class WalletAmountTests {
     @Test
     public void throwsOnDecreaseBelowZero() {
         var walletAmount = new WalletAmount( EXAMPLE_AMOUNT );
-        assertThrows( IllegalWalletAmountException.class, () ->
+        assertThrows( IllegalOperationAmountException.class, () ->
                 walletAmount.decreaseBy( walletAmount.increaseBy( new WalletAmount( 1 ) ) )
         );
     }

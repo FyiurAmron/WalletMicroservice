@@ -9,8 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import money.wallet.api.exception.TransactionIdAlreadyExistsException;
-import money.wallet.api.exception.WalletIdNotFoundException;
+import money.wallet.api.exception.*;
 import money.wallet.api.data.*;
 import money.wallet.api.model.*;
 import money.wallet.api.repository.WalletRepository;
@@ -40,7 +39,8 @@ public class RepositoryWalletService implements WalletService {
     }
 
     @Override
-    public WalletOperation createWallet( long transactionId ) {
+    public WalletOperation createWallet( long transactionId )
+            throws TransactionIdAlreadyExistsException {
         var executionTimer = new ExecutionTimer();
         verifyThatTransactionIdIsUnique( transactionId );
         var wallet = new Wallet();
@@ -65,7 +65,8 @@ public class RepositoryWalletService implements WalletService {
     // WalletOperation removeWallet() { /* */ }
 
     @Override
-    public WalletOperation getBalance( long walletId ) {
+    public WalletOperation getBalance( long walletId )
+            throws WalletIdNotFoundException {
         var executionTimer = new ExecutionTimer();
         Wallet wallet = getWalletById( walletId );
         WalletAmount walletBalance = WalletAmount.from( wallet );
@@ -89,17 +90,20 @@ public class RepositoryWalletService implements WalletService {
     }
 
     @Override
-    public WalletStatement getStatement( long walletId ) {
+    public WalletStatement getStatement( long walletId )
+            throws WalletIdNotFoundException {
         return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId ), walletId );
     }
 
     @Override
-    public WalletStatement getStatement( long walletId, Sort sort ) {
+    public WalletStatement getStatement( long walletId, Sort sort )
+            throws WalletIdNotFoundException {
         return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId, sort ), walletId );
     }
 
     @Override
-    public WalletStatement getStatement( long walletId, Pageable pageable ) {
+    public WalletStatement getStatement( long walletId, Pageable pageable )
+            throws WalletIdNotFoundException {
         return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId, pageable ), walletId );
     }
 
@@ -133,13 +137,19 @@ public class RepositoryWalletService implements WalletService {
 
     @Override
     @Transactional( isolation = Isolation.SERIALIZABLE )
-    public WalletOperation makeDeposit( long walletId, long amount, long transactionId ) {
+    public WalletOperation makeDeposit( long walletId, long amount, long transactionId )
+            throws WalletIdNotFoundException,
+                   IllegalOperationAmountException,
+                   TransactionIdAlreadyExistsException {
         return modifyWalletAmount( walletId, amount, transactionId, true );
     }
 
     @Override
     @Transactional( isolation = Isolation.SERIALIZABLE )
-    public WalletOperation makeWithdrawal( long walletId, long amount, long transactionId ) {
+    public WalletOperation makeWithdrawal( long walletId, long amount, long transactionId )
+            throws WalletIdNotFoundException,
+                   IllegalOperationAmountException,
+                   TransactionIdAlreadyExistsException {
         return modifyWalletAmount( walletId, amount, transactionId, false );
     }
 }
