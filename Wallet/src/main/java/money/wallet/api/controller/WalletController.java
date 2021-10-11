@@ -1,6 +1,7 @@
 package money.wallet.api.controller;
 
 import lombok.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import money.wallet.api.data.WalletOperation;
 import money.wallet.api.exception.*;
@@ -16,6 +17,7 @@ public class WalletController {
     // TODO document @ApiResponses etc.
 
     @PostMapping( "" )
+    @ResponseStatus( code = HttpStatus.CREATED )
     public WalletOperation create(
             @RequestParam( value = "transactionId" ) long transactionId
     ) throws TransactionIdAlreadyExistsException {
