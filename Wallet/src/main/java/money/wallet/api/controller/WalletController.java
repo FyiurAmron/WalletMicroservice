@@ -6,7 +6,6 @@ import money.wallet.api.service.RepositoryWalletService;
 import money.wallet.api.data.WalletStatement;
 import org.springframework.web.bind.annotation.*;
 
-// TODO return HTTP error codes as needed
 @RequiredArgsConstructor
 @RestController
 @RequestMapping( "v0/wallet" )

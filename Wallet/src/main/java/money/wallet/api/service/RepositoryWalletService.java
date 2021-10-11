@@ -2,15 +2,15 @@ package money.wallet.api.service;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-
+import money.wallet.api.exception.TransactionIdAlreadyExistsException;
+import money.wallet.api.exception.WalletIdNotFoundException;
 import money.wallet.api.data.*;
 import money.wallet.api.model.*;
 import money.wallet.api.repository.WalletRepository;
@@ -27,9 +27,16 @@ public class RepositoryWalletService implements WalletService {
 
     private void verifyThatTransactionIdIsUnique( long transactionId ) {
         if ( walletTransactionRepository.existsById( transactionId ) ) {
-            throw new EntityExistsException( "wallet transaction with ID '" + transactionId
-                                                     + "' already present in DB" );
+            throw new TransactionIdAlreadyExistsException( transactionId );
         }
+    }
+
+    private Wallet getWalletById( long walletId ) {
+        Optional<Wallet> walletOptional = walletRepository.findById( walletId );
+        if ( walletOptional.isEmpty() ) {
+            throw new WalletIdNotFoundException( walletId );
+        }
+        return walletOptional.get();
     }
 
     @Override
@@ -60,7 +67,7 @@ public class RepositoryWalletService implements WalletService {
     @Override
     public WalletOperation getBalance( long walletId ) {
         var executionTimer = new ExecutionTimer();
-        Wallet wallet = walletRepository.getById( walletId );
+        Wallet wallet = getWalletById( walletId );
         WalletAmount walletBalance = WalletAmount.from( wallet );
 
         return new WalletOperation(
@@ -74,32 +81,32 @@ public class RepositoryWalletService implements WalletService {
         );
     }
 
-    private WalletStatement toWalletStatement(List<WalletTransaction> walletTransactionList ) {
+    private WalletStatement toWalletStatement( List<WalletTransaction> walletTransactionList, long walletId ) {
         if ( walletTransactionList.size() == 0 ) {
-            throw new EntityNotFoundException();
+            throw new WalletIdNotFoundException( walletId );
         }
         return WalletStatement.fromWalletTransactions( walletTransactionList );
     }
 
     @Override
     public WalletStatement getStatement( long walletId ) {
-        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId ) );
+        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId ), walletId );
     }
 
     @Override
     public WalletStatement getStatement( long walletId, Sort sort ) {
-        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId, sort ) );
+        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId, sort ), walletId );
     }
 
     @Override
     public WalletStatement getStatement( long walletId, Pageable pageable ) {
-        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId, pageable ) );
+        return toWalletStatement( walletTransactionRepository.findAllByWalletId( walletId, pageable ), walletId );
     }
 
     private WalletOperation modifyWalletAmount( long walletId, long amount, long transactionId, boolean isDeposit ) {
         var executionTimer = new ExecutionTimer();
         verifyThatTransactionIdIsUnique( transactionId );
-        Wallet wallet = walletRepository.getById( walletId );
+        Wallet wallet = getWalletById( walletId );
         WalletAmount oldBalance = WalletAmount.from( wallet );
         WalletAmount changeAmount = new WalletAmount( amount );
         WalletAmount newBalance = isDeposit
