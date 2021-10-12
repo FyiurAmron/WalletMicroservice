@@ -2,8 +2,9 @@ package money.wallet.api.service;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import java.util.List;
-import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,8 @@ public class RepositoryWalletService implements WalletService {
     }
 
     private Wallet getWalletById( long walletId ) {
-        Optional<Wallet> walletOptional = walletRepository.findById( walletId );
-        if ( walletOptional.isEmpty() ) {
-            throw new WalletIdNotFoundException( walletId );
-        }
-        return walletOptional.get();
+        return walletRepository.findById( walletId )
+                               .orElseThrow( () -> new WalletIdNotFoundException( walletId ) );
     }
 
     @Override
