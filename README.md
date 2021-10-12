@@ -36,7 +36,7 @@ access by unauthorised persons, not penetration efforts. In case it should be ex
 externally, adding a full proper auth (e.g. OAuth 2.0) with external auth provider should be
 considered.
 Nb. app credentials shouldn't be ordinarily stored in the app itself nor commited to repo,
-in this case they are due to the above reason.
+in this case they are (in `application.properties`) due to the above reason. 
 * Logging and access are generally defaulted to dev environment, i.e. H2 console is enabled,
 extraneous information (including exception/error messages) are emitted etc. When the solution
 goes into production environment, all such parts emitting either verbose or sensitive
