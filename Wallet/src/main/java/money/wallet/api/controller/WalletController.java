@@ -8,6 +8,10 @@ import money.wallet.api.data.WalletOperation;
 import money.wallet.api.exception.*;
 import money.wallet.api.data.WalletStatement;
 
+/**
+ * Note: it's arguable whether using QS params (vs request body) in POST is "right" or "wrong" in any way (e.g. POLA).
+ * Still, it's completely technically valid, and here it allows to have a more consistent API.
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping( "v0/wallet" )
