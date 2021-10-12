@@ -3,16 +3,16 @@ package money.wallet.api.controller;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import money.wallet.api.service.WalletService;
 import money.wallet.api.data.WalletOperation;
 import money.wallet.api.exception.*;
-import money.wallet.api.service.RepositoryWalletService;
 import money.wallet.api.data.WalletStatement;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping( "v0/wallet" )
 public class WalletController {
-    final private RepositoryWalletService walletService;
+    final private WalletService walletService;
 
     // TODO document @ApiResponses etc.
 
