@@ -38,7 +38,7 @@ considered.
 Nb. app credentials shouldn't be ordinarily stored in the app itself nor commited to repo,
 in this case they are (in `application.properties`) due to the above reason. 
 * Logging and access are generally defaulted to dev environment, i.e. H2 console is enabled,
-extraneous information (including exception/error messages) are emitted etc. When the solution
+extraneous information (including exception/error messages) is emitted etc. When the solution
 goes into production environment, all such parts emitting either verbose or sensitive
 information should be disabled via related `application.properties`
 * Implementation of hashCode()/equals() for DB entities may or may not be needed in the future,
